@@ -1,0 +1,26 @@
+kotlin 学习笔记
+1、 kotlin 中var和val区别
+var是一个可变变量，可以重新分配来更改为另一个值的变量
+val是一个只读变量，相当于java中的final ，一个val创建的时候必须初始化，因为以后不能改变
+
+2、 ？ 和 ！！区别
+? 加在变量名后，系统在任何情况下不会报它的空指针异常
+！！加在变量后，如果为null，那么系统一定会报异常
+
+3、 kotlin中使用object修饰静态类，object 关键字可以表达两种含义：一种是对象表达式,另一种是 对象声明
+使用companion object修饰静态方法，可以使用类名.方法名的形式调用
+companion object 修饰为伴生对象,伴生对象在类中只能存在一个，类似于java中的静态方法 Java 中使用类访问静态成员，静态方法。
+
+4、Kotlin 直接支持委托模式，更加优雅，简洁。Kotlin 通过关键字 by 实现委托。
+
+5、关键字init用来处理类的初始化问题，init模块中的内容可以直接使用构造函数的参数。
+
+6、只读属性加上const之后将没有get方法 类似于Java中的final static 定义常量
+
+7、is 相当于java中instanceof，用来检测对象是否是特定类的一个实例
+   as 和 as? 运算符强制类型转换，然后就可以调用对应类的对应方法，
+   Kotlin里面，Int类型不能使用as转换为String类型。使用as运算符进行类型转换，如果转换错误，会抛出异常。
+
+8、arrayOf() 创建数组 ArrayOf创建特定类型数组 ,listOf()创建list,mapOf创建map,setOf创建Set
+
+9、kotlin中所有的类都有一个共同的基类Any，类似于java中的Object
