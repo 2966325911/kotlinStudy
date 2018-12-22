@@ -3,24 +3,172 @@ kotlin 学习笔记
 var是一个可变变量，可以重新分配来更改为另一个值的变量
 val是一个只读变量，相当于java中的final ，一个val创建的时候必须初始化，因为以后不能改变
 
-2、 ？ 和 ！！区别
-? 加在变量名后，系统在任何情况下不会报它的空指针异常
-！！加在变量后，如果为null，那么系统一定会报异常
+2、 ？和 ?. 和 ?: 和 ！！区别
+? 加在变量名后，表示这个类型的变量可以存储null引用，不发生空指针异常 eg： String？ 其实内部是
+Type? = Type or null
+所有常见类型都是非空的，除非显示的标记为空，会有以下限制:
+1) 不能再调用它的方法
+2）不能把它赋给非空类型的变量
+3）不能把它传给非空类型参数的函数
+可以对它进行null比较操作，如果比较后则在其作用域把这个值当做非空对待
+eg： fun strLenSafe(s : String?) : Int =
+    if(s != null) s.length else 0 操作合法
+    kotlin 判断空类型在编译期进行的，如果又不合法的就会纠正，在运行期间是不会发生空指针异常的
 
-3、 kotlin中使用object修饰静态类，object 关键字可以表达两种含义：一种是对象表达式,另一种是 对象声明
+?. 安全调用云算符，允许你把一次null检查和一次方法调用合并成一个操作 eg： S?.toUpperCase()其实是
+S ?. toUpperCase()  foo?.bar()等价于 if (foo != null) bar() else null
+也可以用来访问属性
+
+?: 提供代替null的默认值，Elvis运算符或者null合并运算符 ，接收两个运算符，如果第一个不为null，运算结果就是
+第一个， 如果为null，运算结果是第二个运算符
+eg: foo ?： b if(foo != null) foo else bar 即foo 不为空为bar 为空为null
+s?.length ?: 0
+可以将return和throw写在Elvis的右边 eg：
+val address = person.company?.address ?: throw IllegalArgumentException("No Address")
+     with(address) { // address不为空执行打印，为空抛异常
+        println("address is ....")
+     }
+
+!! 非空断言，加在变量后，强制标识为非null类型，如果为null，那么系统一定会报异常,所以，一定要确保这个
+值部位空才可以使用，如果可能为空，那么标识后一定要做好处理这个异常的准备
+eg foo!! 等价于 foo != null foo foo == null NullPointerException
+
+3、let 和安全调用运算符一起，允许对表达式求值，检查求值的结果是否为null，并把结果保存为一个变量
+也就是用处于处理可用参数，一个函数只接收非空参数，如果传递了参数为空，除了用if（x !=null）之外，用
+let更简便 if(email != null) sendEmailTo(email)  改为 email?.let {email->sendEmailTo(email)}
+参数可使用自动生成的名字it代替 即 email?.let{sendEmailTo(it)}
+
+4、 kotlin中使用object修饰静态类，object 关键字可以表达两种含义：一种是对象表达式,另一种是 对象声明
 使用companion object修饰静态方法，可以使用类名.方法名的形式调用
 companion object 修饰为伴生对象,伴生对象在类中只能存在一个，类似于java中的静态方法 Java 中使用类访问静态成员，静态方法。
 
-4、Kotlin 直接支持委托模式，更加优雅，简洁。Kotlin 通过关键字 by 实现委托。
+5、Kotlin 直接支持委托模式，更加优雅，简洁。Kotlin 通过关键字 by 实现委托。
+ class Foo {
+    var p : Type by Delegate()
+ }
+ 属性p将它的访问器逻辑委托给另一个对象，通过by对气候的表达式求值来获取，关键词by可以用于任何符合
+ 属性委托约定规则的对象
+ 按照约定Detegate（）类必须有getValue和setValue方法，p的访问都会调用对应的Detegate的getValue
+ 和setValue的方法
 
-5、关键字init用来处理类的初始化问题，init模块中的内容可以直接使用构造函数的参数。
+ 委托属性:惰性初始化和by lazy()
+ class Person(val name:String) {
+    val emails by lazy{loadEmails(this)}
+ }
+ lazy函数返回一个对象，默认情况向，lazy函数是线程安全的
 
-6、只读属性加上const之后将没有get方法 类似于Java中的final static 定义常量
+6、关键字init用来处理类的初始化问题，init模块中的内容可以直接使用构造函数的参数。
 
-7、is 相当于java中instanceof，用来检测对象是否是特定类的一个实例
+7、只读属性加上const之后将没有get方法 类似于Java中的final static 定义常量
+
+8、is 相当于java中instanceof，用来检测对象是否是特定类的一个实例
    as 和 as? 运算符强制类型转换，然后就可以调用对应类的对应方法，
+   as 转换如果转换不成功就会抛出ClassCastException异常
+   as? 安全转换,如果转换不成功就返回null eg : foo as? Type等价于 foo is Type foo as type
+   foo !is Type null
    Kotlin里面，Int类型不能使用as转换为String类型。使用as运算符进行类型转换，如果转换错误，会抛出异常。
 
-8、arrayOf() 创建数组 ArrayOf创建特定类型数组 ,listOf()创建list,mapOf创建map,setOf创建Set
+9、arrayOf() 创建数组 ArrayOf创建特定类型数组 ,listOf()创建list,mapOf创建map,setOf创建Set
 
-9、kotlin中所有的类都有一个共同的基类Any，类似于java中的Object
+10、kotlin中所有的类都有一个共同的基类Any，类似于java中的Object,Any是kotlin所有非空类型的超
+类型，包含Int这样的数据类型，Any是非空类型，不可以只有null值
+
+11、延迟初始化的属性  用lateinit 修饰
+eg： lateinit var myService : MyService
+@Before fun setUp(){
+    myService = MysService()
+}
+
+12、可空类型的扩展 处理空的String类型，用String 的isEmptyOrNUll和isNullOrBlank可用由String？类型
+的接收者调用
+类型参数的可空性 : kotlin 中所有泛型和泛型函数的类型参数默认都是可空的，任何类型包括可空类型在内 ，
+都可以替换类型参数
+
+13 kotlin用object 修饰静态类
+ companion object 修饰静态方法，可以使用类名.方法名的形式调用
+ eg : compaion object {
+        fun getName(){
+        }
+    }
+
+14 kotlin 不区分基本数据类型和它们的包装类，基本数据类型不能调用方法等，kotlin不区分，使得得到的始终是同一个
+类型，使得可以对一个数字类型的值调用方法eg:
+fun showProgress(progress : Int) {
+// 调用coerceIn来把值限定在特定的范围内
+    val percent = progress.coerceIn(0,100)
+}
+
+15、kotlin中不会自动的把数字从一种类型转换成另一种类型，必须显示的转换eg
+val i = 1
+val l : Long = i.toLong()
+转换函数toByte()、toShort()、toChar()、toLong()、toInt()
+eg:val x = 1  val list = listOf(1L,2L,3L)  x in list返回false，必须显示的指明x的类型
+val x : Long = 1 或者 x.toLong() int list,这样避免意外情况
+kotlin中标准的数字书写方式：
+使用后缀L表示Long类型 ： 123L
+使用标准浮点型表示Double：0.12 ，2.0 ， 1.2e10,1.2e-10
+使用后缀F表示Float类型：123.4f，.456F,1e3f
+使用0x 或者0X表示十六进制：0xCAEBABE
+使用0b或者0B表示二进制：0b000001
+
+16、 Kotlin中的Unit类型完成了java中void一样的功能，一般是指的Unit声明被省略，底层会编译成旧的void
+函数，Unit是一个完备的类型，可以作为类型参数，void不行，Unit习惯被用来表示“只有一个实例”
+Nothing类型没有任何值，只有被当做函数返回值使用，或者被当做泛型函数返回值的类型参数使用时才有意义。
+eg： fun fail(message : String) : Nothing {
+    throw IllegalStateException(message)
+}
+
+17、函数中参数的可空也是允许的，和表示属性的一样，在参数后加？即可eg
+fun readNumber(reader:BufferedReader) : List<Int?>{//创建可空Int值的列表，可以只有Int或者null
+}
+变量自己类型的可空性和用作参数的类型的可空性是有区别的
+遍历一个包含可空值的集合并过滤null是一个非常常见的操作,kotlin中提供filterNotNull来完成
+
+kotlin中把访问集合的接口和修改数据的接口分开了，kotlin.collections.Collection，使用这个接口
+可以遍历集合中的元素，获取集合的大小，判断集合中是否包含某个元素，以及执行其他从该集合读取数据的操作，
+但不提供任何添加或移除元素的方法，使用kotlin.collections.MutableCollection接口可以修改集合中的数据
+接口集合中只读结合不一定是不可变的
+
+19 with 内联函数，with(object)  一般和lambda结合使用 eg：
+定义：fun <T, R> with(receiver: T, block: T.() -> R): R
+ fun with(object){
+    a-> ...
+    b->...
+ }
+功能：将对象作为函数的参数，在函数内可以通过 this指代该对象。返回值为函数的最后一行或return表达式。
+ var paint = Paint()
+    paint.color = Color.BLACK
+    paint.strokeWidth = 1.0f
+    paint.textSize = 18.0f
+    paint.isAntiAlias = true
+如果使用with，那么就可以写成这样
+
+var paint = Paint()
+with(paint) {
+        color = Color.BLACK
+        strokeWidth = 1.0f
+        textSize = 18.0f
+        isAntiAlias = true
+    }
+
+
+20 为了将数组展开并传入可变参数，Kotlin使用星号（*）操作符将数组进行展开：
+fun main(args: Array<String>) {
+    val arr = intArrayOf(2, 1, 3)
+    sum(*arr)
+}
+
+21 mapTo 将给定的变换函数应用于原始数组的每个元素，并将结果附加到给定目标。 eg:
+private val mTabEntities  = ArrayList<CustomTabEntity>()
+(0 until mTitles.size).mapTo(mTabEntities){
+            TabEntity(mTitles[it],mIconSelectIds[it],mIconUnSelectIds[it])
+        }
+给每个标题赋值（until:半闭区间运算符 ： “a until b”从a到b范围内所有的值，包括a和不包括b。）
+
+22 协变类是一个泛型类 如果A是B的子类型，Producer<A> 就是Producer<B>的子类型，子类型化被保留了
+ 逆变 B是A的子类型，那么Consumer<A>就是Consumer<B>的子类型
+ kotlin中MutableList<out T>和java中MutableList<? extends T>是一个意思，是out输出的
+ in投影的MutableList<in T>对应到java的MutableList<? super T>
+
+23使用*代替类型参数 ，星号投影,用它来表明你不知道关于泛型实参的任何信息， 只能用于在
+对泛型类型实参的确切值不感兴趣的地方，这是使用生产值的方法，不关心那些值的类型
