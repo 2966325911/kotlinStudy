@@ -1,12 +1,12 @@
 package com.kangengine.kotlinstudydemo.ui.fragment
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import com.hazz.kotlinmvp.mvp.model.bean.HomeBean
 
 import com.kangengine.kotlinstudydemo.R
@@ -15,6 +15,7 @@ import com.kangengine.kotlinstudydemo.mvp.contract.HomeContract
 import com.kangengine.kotlinstudydemo.mvp.presenter.HomePresenter
 import com.kangengine.kotlinstudydemo.net.exception.ErrorStatus
 import com.kangengine.kotlinstudydemo.showToast
+import com.kangengine.kotlinstudydemo.ui.activity.SearchActivity
 import com.kangengine.kotlinstudydemo.ui.adapter.HomeAdapter
 import com.kangengine.kotlinstudydemo.utils.StatusBarUtil
 import com.scwang.smartrefresh.header.MaterialHeader
@@ -129,8 +130,9 @@ class HomeFragment : BaseFragment(),HomeContract.View{
             val options = activity?.let {
                 ActivityOptionsCompat.makeSceneTransitionAnimation(it,iv_search,iv_search.transitionName)
             }
+            startActivity(Intent(activity,SearchActivity::class.java),options?.toBundle())
         }else {
-//            startActivity(Intent(activity,SearchActivity::class.java))
+            startActivity(Intent(activity, SearchActivity::class.java))
         }
     }
 

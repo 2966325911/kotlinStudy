@@ -8,6 +8,7 @@ import android.content.Intent
 import android.os.Build
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.ActivityOptionsCompat
+import android.support.v4.util.Pair
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,7 @@ import com.kangengine.kotlinstudydemo.Constants
 import com.kangengine.kotlinstudydemo.R
 import com.kangengine.kotlinstudydemo.durationFormat
 import com.kangengine.kotlinstudydemo.glide.GlideApp
+import com.kangengine.kotlinstudydemo.ui.activity.VideoDetailActivity
 import com.kangengine.kotlinstudydemo.view.recyclerview.ViewHolder
 import com.kangengine.kotlinstudydemo.view.recyclerview.adapter.CommonAdapter
 import io.reactivex.Observable
@@ -201,18 +203,18 @@ class HomeAdapter(context: Context,data:ArrayList<HomeBean.Issue.Item>):
      * 跳转到视频播放页面详情
      */
     private fun goToVideoPlay(activity: Activity,view:View,itemData: HomeBean.Issue.Item){
-//        val intent = Intent(activity,VideoDetailActivity::class.java)
-//        intent.putExtra(Constants.BUNDLE_VIDEO_DATA,itemData)
-//        intent.putExtra(VideoDetailActivity.TRANSITIOn,true)
-//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-//            val pair = Pair(view,VideoDetailActivity.IMG_TRANSITION)
-//            val activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(
-//                activity,pair)
-//            ActivityCompat.startActivity(activity,intent,activityOptions.toBundle())
-//        }else {
-//            activity.startActivity(intent)
-//            activity.overridePendingTransition(R.anim.anim_in,R.anim.anim_out)
-//        }
+        val intent = Intent(activity, VideoDetailActivity::class.java)
+        intent.putExtra(Constants.BUNDLE_VIDEO_DATA,itemData)
+        intent.putExtra(VideoDetailActivity.TRANSITION,true)
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            val pair = Pair(view, VideoDetailActivity.IMG_TRANSITION)
+            val activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                activity, pair)
+            ActivityCompat.startActivity(activity,intent,activityOptions.toBundle())
+        }else {
+            activity.startActivity(intent)
+            activity.overridePendingTransition(R.anim.anim_in,R.anim.anim_out)
+        }
     }
 
 }
