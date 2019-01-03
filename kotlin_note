@@ -172,3 +172,23 @@ private val mTabEntities  = ArrayList<CustomTabEntity>()
 
 23使用*代替类型参数 ，星号投影,用它来表明你不知道关于泛型实参的任何信息， 只能用于在
 对泛型类型实参的确切值不感兴趣的地方，这是使用生产值的方法，不关心那些值的类型
+
+24 可见性修饰符 internal：如果一个定义为  internal 的包成员的话，对所在的整个 module 可见。
+如果它是一个其他领域的成员，它就需要依赖那个领域的可见性。如有一个 private 类，
+那么它的 internal 修饰的函数的可见性会限制与它所在的该类的可见性。可以访问同一个 module 中的
+ internal 修饰的类，但不能访问其他 module的。
+
+25 Kotlin的三目表达式
+   var a = 10
+   var b = 8
+   var result = if(a>b){a}else{b} //Kotlin中的三目运算  最后结果 8
+
+26 switch 在kotlin中用when代替 eg:
+when(a){
+            1->"result 1"
+            1,2->"1 or 2"
+            in 1..10->">=1 or <=10"
+            !in 1..10->"<1 or >10"
+            is Int->"Integer"
+            else->"Default"
+        }
