@@ -9,6 +9,7 @@ import com.kangengine.kotlinstudydemo.R
 import com.kangengine.kotlinstudydemo.base.BaseFragment
 import com.kangengine.kotlinstudydemo.showToast
 import com.kangengine.kotlinstudydemo.ui.activity.ProfileHomePageActivity
+import com.kangengine.kotlinstudydemo.ui.activity.WatchHistoryActivity
 import com.kangengine.kotlinstudydemo.utils.StatusBarUtil
 import kotlinx.android.synthetic.main.fragment_mine.*
 
@@ -68,8 +69,8 @@ class MineFragment : BaseFragment(), View.OnClickListener {
             v.id == R.id.tv_mine_message->showToast("我的消息")
             v.id == R.id.tv_mine_cache -> showToast("我的缓存")
             v.id == R.id.tv_watch_history -> {
-//                val intent = Intent(activity,WatchHistoryActivity::class.java)
-//                startActivity(intent)
+                val intent = Intent(activity, WatchHistoryActivity::class.java)
+                startActivity(intent)
             }
             v.id == R.id.tv_feedback -> showToast("意见反馈")
 

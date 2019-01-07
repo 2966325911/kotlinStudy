@@ -51,6 +51,8 @@
 		</activity>
 		<activity android:name=".ui.activity.ProfileHomePageActivity">
 		</activity>
+		<activity android:name=".ui.activity.WatchHistoryActivity">
+		</activity>
 	</application>
 
 </manifest>
